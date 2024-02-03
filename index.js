@@ -72,7 +72,7 @@ opts.secretOrKey = process.env.JWT_SECRET_KEY; // TODO: should not be in code;
 //middlewares
 
 server.use(express.static(path.resolve(__dirname,'build')))
-server.use(cookieParser());
+server.use(cookieParser('secret'));
 server.use(
   session({
     secret: process.env.SESSION_KEY,
