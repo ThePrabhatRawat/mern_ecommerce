@@ -14,3 +14,4 @@ next step is to setup the checkout page for the user
 for adding this we just need to install the livraries as given in stripe custom docummentation then paste the app.js in your respected file as in my case it is StripeCheckout.js from where we will navigate to checkoutForm.js which is also provided in the same documente
 stripe-login comman at terminal is required inorder to run stripe webhook in localhost as webhooks are only applicable to the website or in live server
 then go to the url that will be availble after the login and simply comes back after the access granted and use the command to test stripe trigger payment_intent.succeeded
+also the rewrite code in vercel.json helps in taking routing directly form the node and there is no need to add aditional routings in the vercel.json
