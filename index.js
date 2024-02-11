@@ -22,6 +22,7 @@ const ordersRouter = require('./routes/Order');
 const { User } = require('./model/User');
 const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
 const path = require('path');
+const { Order } = require('./model/Order');
 
 console.log(process.env)
 
@@ -31,7 +32,7 @@ console.log(process.env)
 
 const endpointSecret = process.env.ENDPOINT_SECRET;
 
-server.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+server.post('/webhook', express.raw({type: 'application/json'}), async (request, response) => {
   const sig = request.headers['stripe-signature'];
 
   let event;
@@ -48,7 +49,11 @@ server.post('/webhook', express.raw({type: 'application/json'}), (request, respo
     case 'payment_intent.succeeded':
       const paymentIntentSucceeded = event.data.object;
       console.log({paymentIntentSucceeded})
-      // Then define and call a function to handle the event payment_intent.succeeded
+      // now for saving the payment status just get the order from the order id form the paymneInterntSucceeded and then change the paymnet status
+      // to received
+      const order = await Order.findOne( paymentIntentSucceeded.metadata.orderId);
+      order.paymentStatus = "received";
+      await order.save();
       break;
     // ... handle other event types
     default:
@@ -184,7 +189,7 @@ server.post("/create-payment-intent", async (req, res) => {
     automatic_payment_methods: {
       enabled: true,
     },
-    metaData :{
+    metadata :{
       orderId,
     }
   });
