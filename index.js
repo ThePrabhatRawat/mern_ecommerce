@@ -51,7 +51,7 @@ server.post('/webhook', express.raw({type: 'application/json'}), async (request,
       console.log({paymentIntentSucceeded})
       // now for saving the payment status just get the order from the order id form the paymneInterntSucceeded and then change the paymnet status
       // to received
-      const order = await Order.findOne( paymentIntentSucceeded.metadata.orderId);
+      const order = await Order.findById( paymentIntentSucceeded.metadata.orderId);
       order.paymentStatus = "received";
       await order.save()
       break;
