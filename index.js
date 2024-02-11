@@ -53,7 +53,7 @@ server.post('/webhook', express.raw({type: 'application/json'}), async (request,
       // to received
       const order = await Order.findOne( paymentIntentSucceeded.metadata.orderId);
       order.paymentStatus = "received";
-      await order.save();
+      await order.save()
       break;
     // ... handle other event types
     default:
