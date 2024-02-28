@@ -24,14 +24,16 @@ exports.fetchAllProducts = async (req, res) => {
   let query = Product.find(condition);
   let totalProductsQuery = Product.find(condition);
 
+  console.log(req.query.category);
+
   if (req.query.category) {
     query = query.find({ category: {$in:req.query.category.split(',')} });
     totalProductsQuery = totalProductsQuery.find({
-      category: req.query.category,
+      category: {$in:req.query.category.split(',')},
     });
   }
   if (req.query.brand) {
-    query = query.find({ brand: req.query.brand });
+    query = query.find({ brand: {$in:req.query.brand.split(',')} });
     totalProductsQuery = totalProductsQuery.find({ brand: {$in:req.query.brand.split(',') }});
   }
   if (req.query._sort && req.query._order) {
@@ -78,3 +80,5 @@ exports.updateProduct = async (req, res) => {
     res.status(400).json(err);
   }
 };
+
+

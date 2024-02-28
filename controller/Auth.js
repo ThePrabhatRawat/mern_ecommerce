@@ -21,14 +21,17 @@ exports.createUser = async (req, res) => {
           if (err) {
             res.status(400).json(err);
           } else {
-            const token = jwt.sign(sanitizeUser(doc), process.env.JWT_SECRET_KEY);
+            const token = jwt.sign(
+              sanitizeUser(doc),
+              process.env.JWT_SECRET_KEY
+            );
             res
               .cookie('jwt', token, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true,
               })
               .status(201)
-              .json({id:doc.id, role:doc.role});
+              .json({ id: doc.id, role: doc.role });
           }
         });
       }
@@ -39,15 +42,16 @@ exports.createUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const user = req.user
+  const user = req.user;
   res
     .cookie('jwt', user.token, {
       expires: new Date(Date.now() + 3600000),
       httpOnly: true,
     })
     .status(201)
-    .json({id:user.id, role:user.role});
+    .json({ id: user.id, role: user.role });
 };
+
 exports.logout = async (req, res) => {
   res
     .cookie('jwt', null, {
@@ -56,18 +60,16 @@ exports.logout = async (req, res) => {
     })
     .sendStatus(200)
 };
+
 exports.checkAuth = async (req, res) => {
-  if(req.user){
+  if (req.user) {
     res.json(req.user);
-  } else{
+  } else {
     res.sendStatus(401);
   }
 };
-exports.resetPasswordRequest = async (req, res) => {
 
-  // now when the user when clicks on the reset password request then we generate a token and when user clicks on the link we check weather 
-  // its the same token or not this prevents unauthorize user as anyone who knows the link can go and reset the password but with the token system
-  // only a person who request for the change in password can do the changing 
+exports.resetPasswordRequest = async (req, res) => {
   const email = req.body.email;
   const user = await User.findOne({ email: email });
   if (user) {
@@ -93,6 +95,7 @@ exports.resetPasswordRequest = async (req, res) => {
     res.sendStatus(400);
   }
 };
+
 exports.resetPassword = async (req, res) => {
   const { email, password, token } = req.body;
 
