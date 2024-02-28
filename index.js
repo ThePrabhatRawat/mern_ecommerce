@@ -24,11 +24,9 @@ const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
 const path = require('path');
 const { Order } = require('./model/Order');
 
-console.log(process.env)
 
 // Webhook
 
-// TODO: we will capture actual order after deploying out server live on public URL
 
 const endpointSecret = process.env.ENDPOINT_SECRET;
 
@@ -72,7 +70,7 @@ server.post('/webhook', express.raw({type: 'application/json'}), async (request,
 
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
-opts.secretOrKey = process.env.JWT_SECRET_KEY; // TODO: should not be in code;
+opts.secretOrKey = process.env.JWT_SECRET_KEY;
 
 //middlewares
 
@@ -101,6 +99,9 @@ server.use('/users', isAuth(), usersRouter.router);
 server.use('/auth', authRouter.router);
 server.use('/cart', isAuth(), cartRouter.router);
 server.use('/orders', isAuth(), ordersRouter.router);
+
+
+  
 // the below line we add to make the react router work in case of other routes doesent match
 server.get('*',(req,res)=>res.sendFile(path.resolve('build','index.html')));
 
